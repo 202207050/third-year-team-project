@@ -38,4 +38,5 @@ python -m pytest tests
 
 - [공통 API 명세](docs/news-sentiment-integration.md) — 요청·응답 계약과 현재 지원 범위
 - [Frontend 인수인계](docs/frontend-handoff.md) — UI 표시와 호출 흐름
+- [뉴스 감성분석 UI 가이드](docs/news-sentiment-ui-handoff.md) — 배지, 대기·오류 상태 처리
 - [Backend 인수인계](docs/backend-handoff.md) — AI Server 연결 작업

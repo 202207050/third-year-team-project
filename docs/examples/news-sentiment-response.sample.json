@@ -1,0 +1,25 @@
+{
+  "articles": [
+    {
+      "article_id": "demo-positive",
+      "sentiment": {
+        "label": "POSITIVE",
+        "confidence": 0.95
+      }
+    },
+    {
+      "article_id": "demo-neutral",
+      "sentiment": {
+        "label": "NEUTRAL",
+        "confidence": 0.9
+      }
+    },
+    {
+      "article_id": "demo-negative",
+      "sentiment": {
+        "label": "NEGATIVE",
+        "confidence": 0.95
+      }
+    }
+  ]
+}

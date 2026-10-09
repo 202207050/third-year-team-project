@@ -23,3 +23,5 @@
 `Frontend → Backend → AI Server` 구조를 권장합니다. Frontend가 AI Server를 직접 호출하지 않도록 Backend 연결 일정을 맞춰 주세요.
 
 상세 계약은 [공통 API 명세](news-sentiment-integration.md)를 참고하세요.
+
+UI 상태와 배지 동작은 [뉴스 감성분석 UI 가이드](news-sentiment-ui-handoff.md)를 참고하세요.
