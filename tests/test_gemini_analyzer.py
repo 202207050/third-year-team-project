@@ -26,6 +26,7 @@ def result(article_id, label="NEUTRAL", confidence=0.8):
     return {
         "article_id": article_id,
         "sentiment": {"label": label, "confidence": confidence},
+        "importance_score": 0.5,
     }
 
 
@@ -40,6 +41,17 @@ def test_valid_sentiment_labels(label):
     output = analyzer.analyze([Article(article_id="a", title="Sample news")])
     assert output[0].sentiment.label.value == label
     assert output[0].sentiment.confidence == 0.8
+    assert output[0].importance.score == 0.5
+    assert output[0].importance.label.value == "MEDIUM"
+
+
+def test_gemini_importance_score_maps_to_server_label():
+    item = result("a", "NEGATIVE")
+    item["importance_score"] = 0.70
+    analyzer, _ = analyzer_for([item])
+    output = analyzer.analyze([Article(article_id="a", title="Sample news")])
+    assert output[0].importance.score == 0.70
+    assert output[0].importance.label.value == "HIGH"
 
 
 def test_batch_sentiment_analysis():

@@ -1,23 +1,13 @@
-import json
 from typing import Any
 
-from ..schemas import Article, ArticleAnalysis, NewsSentimentBatch
+from ..schemas import Article, ArticleAnalysis, Importance, NewsSentimentBatch
 from ..settings import GEMINI_MODEL, get_gemini_api_key
-from .base import AnalyzerError, AnalyzerResponseError, AnalyzerUnavailableError
-
-
-def _build_prompt(articles: list[Article]) -> str:
-    source_articles = [article.model_dump(mode="json") for article in articles]
-    return (
-        "Analyze the investment impact direction of each news article on its named "
-        "company or market, not the emotional tone of its wording. POSITIVE means "
-        "materially favorable expected impact, NEGATIVE means materially adverse "
-        "expected impact, and NEUTRAL means unclear, balanced, or insufficient impact. "
-        "Return exactly one result for every input article and copy each article_id "
-        "exactly. Confidence must be between 0 and 1. Do not infer facts absent from "
-        "the supplied text.\n\nArticles:\n"
-        + json.dumps(source_articles, ensure_ascii=False)
-    )
+from .base import (
+    AnalyzerError,
+    AnalyzerResponseError,
+    AnalyzerUnavailableError,
+    build_news_analysis_prompt,
+)
 
 
 class GeminiNewsAnalyzer:
@@ -46,7 +36,7 @@ class GeminiNewsAnalyzer:
         try:
             response = self._client.models.generate_content(
                 model=self._model,
-                contents=_build_prompt(articles),
+                contents=build_news_analysis_prompt(articles),
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     response_json_schema=NewsSentimentBatch.model_json_schema(),
@@ -72,4 +62,11 @@ class GeminiNewsAnalyzer:
             raise AnalyzerResponseError("Gemini response article_id values do not match request")
 
         by_id = {result.article_id: result for result in batch.articles}
-        return [by_id[article_id] for article_id in requested_ids]
+        return [
+            ArticleAnalysis(
+                article_id=article_id,
+                sentiment=by_id[article_id].sentiment,
+                importance=Importance(score=by_id[article_id].importance_score),
+            )
+            for article_id in requested_ids
+        ]

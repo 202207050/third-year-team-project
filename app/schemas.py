@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 
 class Schema(BaseModel):
@@ -29,13 +29,44 @@ class Sentiment(Schema):
     confidence: float = Field(ge=0, le=1)
 
 
+class ImportanceLabel(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+
+
+def importance_label_for_score(score: float) -> ImportanceLabel:
+    # Keep importance band boundaries in one place for every provider.
+    if score < 0.35:
+        return ImportanceLabel.LOW
+    if score < 0.70:
+        return ImportanceLabel.MEDIUM
+    return ImportanceLabel.HIGH
+
+
+class Importance(Schema):
+    score: float = Field(ge=0, le=1)
+
+    @computed_field
+    @property
+    def label(self) -> ImportanceLabel:
+        return importance_label_for_score(self.score)
+
+
 class ArticleAnalysis(Schema):
     article_id: str = Field(min_length=1)
     sentiment: Sentiment
+    importance: Importance
+
+
+class ArticlePrediction(Schema):
+    article_id: str = Field(min_length=1)
+    sentiment: Sentiment
+    importance_score: float = Field(ge=0, le=1)
 
 
 class NewsSentimentBatch(Schema):
-    articles: list[ArticleAnalysis]
+    articles: list[ArticlePrediction]
 
 
 class NewsAnalysisRequest(Schema):

@@ -1,0 +1,19 @@
+{
+  "articles": [
+    {
+      "article_id": "sample-positive-high",
+      "sentiment": {"label": "POSITIVE", "confidence": 0.91},
+      "importance": {"score": 0.82, "label": "HIGH"}
+    },
+    {
+      "article_id": "sample-neutral-low",
+      "sentiment": {"label": "NEUTRAL", "confidence": 0.74},
+      "importance": {"score": 0.24, "label": "LOW"}
+    },
+    {
+      "article_id": "sample-negative-high",
+      "sentiment": {"label": "NEGATIVE", "confidence": 0.88},
+      "importance": {"score": 0.93, "label": "HIGH"}
+    }
+  ]
+}
