@@ -33,3 +33,9 @@ python -m pytest tests
 
 테스트는 SDK 호출 경계 mock/stub를 사용하며 네트워크나 API 키를 사용하지 않습니다.
 입력 검증 실패는 422이며 분석 실패를 정상 결과로 대체하지 않습니다.
+
+## Integration Docs
+
+- [공통 API 명세](docs/news-sentiment-integration.md) — 요청·응답 계약과 현재 지원 범위
+- [Frontend 인수인계](docs/frontend-handoff.md) — UI 표시와 호출 흐름
+- [Backend 인수인계](docs/backend-handoff.md) — AI Server 연결 작업
